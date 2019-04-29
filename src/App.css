@@ -6,10 +6,12 @@
 
 .App-button{
   width: 70%;
+  height: 31px;
 }
 
 .App-input{
   width: 29.58%;
+  height: 25px;
 }
 
 .App-listitem{
@@ -23,6 +25,6 @@
 }
 
 *{
-  margin-left: 0;
+  margin-top: 0;
   margin-right: 0;
 }

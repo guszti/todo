@@ -17,8 +17,10 @@ class TodoItems extends React.Component{
     return(
       <ul className='App-list'>
         {this.props.items.map((item, index) => 
-            <li className='App-listitem' key={index} onClick={this.handleDelete.bind(this, item)}>
+            <li className='App-listitem' key={index}>
+              <input type='checkbox'></input>
               {item}
+              <button onClick={this.handleDelete.bind(this, item)} style={{float:'right',height:27,width:27,color:'yellow',backgroundColor:'red'}}>X</button>
             </li>
         )}
       </ul>
@@ -90,7 +92,36 @@ class TodoList extends React.Component{
     );
   }
 }
+/*
+class Numbers extends React.Component{
+  constructor(props){
+    super(props);
 
+    this.state = {count: 0};
+  }
+
+  componentDidMount(){
+    setInterval(
+      () => this.increase(),
+      0
+    ); 
+  }
+
+  increase(){
+    this.setState({
+      count: this.state.count + 1
+    });
+  }
+
+  render(){
+    return(
+      <div>
+        <p>{this.state.count}</p>
+      </div>
+    );
+  }
+}
+*/
 function App() {
   return (
     <div className="App">
