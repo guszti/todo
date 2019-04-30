@@ -27,32 +27,6 @@ class TodoItem extends React.Component{
   }
 }
 
-class TodoItems extends React.Component{
-  constructor(props){
-    super(props);
-
-    this.handleDelete = this.handleDelete.bind(this);
-  }
-
-  handleDelete(id){
-    this.props.removeItem(id);
-    console.log(id);
-  }
-
-  render(){
-    return(
-      <ul className='App-list'>
-        {this.props.items.map((item, index) => 
-          <li className='App-listitem' key={index}>
-            <TodoItem text={item} handleDelete={this.handleDelete} />  
-          </li>
-        )}
-      </ul>
-    );
-  }
-
-}
-
 class TodoInput extends React.Component{
   constructor(props){
     super(props);
@@ -112,41 +86,18 @@ class TodoList extends React.Component{
     return(
       <div>
         <TodoInput addItem={this.addItem}/>
-        <TodoItems items={this.state.items}  removeItem={this.removeItem} />
+        <ul className='App-list'>
+          {this.state.items.map((item, index) => 
+            <li className='App-listitem' key={index}>
+              <TodoItem text={item} handleDelete={this.removeItem} />
+            </li>
+          )}
+        </ul>
       </div>
     );
   }
 }
-/*
-class Numbers extends React.Component{
-  constructor(props){
-    super(props);
 
-    this.state = {count: 0};
-  }
-
-  componentDidMount(){
-    setInterval(
-      () => this.increase(),
-      0
-    ); 
-  }
-
-  increase(){
-    this.setState({
-      count: this.state.count + 1
-    });
-  }
-
-  render(){
-    return(
-      <div>
-        <p>{this.state.count}</p>
-      </div>
-    );
-  }
-}
-*/
 function App() {
   return (
     <div className="App">
