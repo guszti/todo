@@ -21,7 +21,7 @@ class TodoItem extends React.Component{
       <div>
         <input type='checkbox' onChange={this.handleCheck}></input>
           {this.state.isChecked ? <del>{this.props.text}</del> : this.props.text}
-        <button onClick={this.props.handleDelete.bind(this, this.props.text)} style={{float:'right',height:27,width:27,color:'yellow',backgroundColor:'red'}}>X</button>
+        <button onClick={this.props.handleDelete.bind(this, this.props.id)} style={{float:'right',height:27,width:27,color:'yellow',backgroundColor:'red'}}>X</button>
       </div>
     );
   }
@@ -77,9 +77,15 @@ class TodoList extends React.Component{
   }
 
   removeItem(id){
-    this.setState(prevState => ({
+    this.state.items.splice(id, 1);
+    /*this.setState(prevState => ({
       items: prevState.items.filter(el => el !== id )
-    }));
+    }));*/
+
+    this.setState({
+      items: this.state.items
+    });
+    console.log(id);
   }
 
   render(){
@@ -89,7 +95,7 @@ class TodoList extends React.Component{
         <ul className='App-list'>
           {this.state.items.map((item, index) => 
             <li className='App-listitem' key={index}>
-              <TodoItem text={item} handleDelete={this.removeItem} />
+              <TodoItem id={index} text={item} handleDelete={this.removeItem} />
             </li>
           )}
         </ul>
