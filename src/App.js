@@ -1,6 +1,32 @@
 import React from 'react';
 import './App.css';
 
+class TodoItem extends React.Component{
+  constructor(props){
+    super(props);
+
+    this.state = {isChecked: false};
+
+    this.handleCheck = this.handleCheck.bind(this);
+  }
+
+  handleCheck(){
+    this.setState({
+      isChecked: !this.state.isChecked
+    });
+  }
+
+  render(){
+    return(
+      <div>
+        <input type='checkbox' onChange={this.handleCheck}></input>
+          {this.state.isChecked ? <del>{this.props.text}</del> : this.props.text}
+        <button onClick={this.props.handleDelete.bind(this, this.props.text)} style={{float:'right',height:27,width:27,color:'yellow',backgroundColor:'red'}}>X</button>
+      </div>
+    );
+  }
+}
+
 class TodoItems extends React.Component{
   constructor(props){
     super(props);
@@ -17,15 +43,14 @@ class TodoItems extends React.Component{
     return(
       <ul className='App-list'>
         {this.props.items.map((item, index) => 
-            <li className='App-listitem' key={index}>
-              <input type='checkbox'></input>
-              {item}
-              <button onClick={this.handleDelete.bind(this, item)} style={{float:'right',height:27,width:27,color:'yellow',backgroundColor:'red'}}>X</button>
-            </li>
+          <li className='App-listitem' key={index}>
+            <TodoItem text={item} handleDelete={this.handleDelete} />  
+          </li>
         )}
       </ul>
     );
   }
+
 }
 
 class TodoInput extends React.Component{
