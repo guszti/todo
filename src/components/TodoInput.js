@@ -20,7 +20,7 @@ class TodoInput extends React.Component{
   
     handleSubmit(e){
       e.preventDefault();
-      if(this.state.inTitle != ''){
+      if(this.state.inTitle !== ''){
         const todoItem = {
           title: this.state.inTitle,
           date: this.state.inDate

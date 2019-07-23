@@ -16,6 +16,15 @@ class TodoList extends React.Component{
       this.restoreItem = this.restoreItem.bind(this);
     }
   
+    componentDidMount(){
+      //localStorage.clear();
+      if(localStorage.getItem('items') !== null){
+        this.setState({
+          items: JSON.parse(localStorage.getItem('items'))
+        });
+      }
+    }
+    
     restoreItem(){
       const itemToRestore = this.state.last;
       const newList = this.state.items;
@@ -25,11 +34,17 @@ class TodoList extends React.Component{
         items: newList,
         last: null
       });
+
+      const items = this.state.items;
+      localStorage.setItem('items', JSON.stringify(items));
     }
 
     addItem(i){
       this.setState({ 
         items: this.state.items.concat([i])
+      }, () => {
+        const items = this.state.items;
+        localStorage.setItem('items', JSON.stringify(items));
       })
     }
   
@@ -46,7 +61,9 @@ class TodoList extends React.Component{
         items: newList,
         last: lastDeleted
       });
-      console.log(id);
+      
+      const items = this.state.items;
+      localStorage.setItem('items', JSON.stringify(items));
     }
 
     render(){
@@ -54,11 +71,11 @@ class TodoList extends React.Component{
           <div>
             <TodoInput addItem={this.addItem}/>
             <br />
-              {this.state.items.map((item, index) => 
+              {this.state.items !== null ? this.state.items.map((item, index) => 
                 <div className='App-listitem' key={index}>
                   <TodoItem id={index} todoItem={item} handleDelete={this.removeItem} />
                 </div>
-              )}
+              ) : ''}
             <br/>
             {this.state.last ? <button onClick={this.restoreItem}>Restore deleted item</button> : ''}
           </div>
