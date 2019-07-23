@@ -53,13 +53,12 @@ class TodoList extends React.Component{
         return(
           <div>
             <TodoInput addItem={this.addItem}/>
-            <ul className='App-list'>
+            <br />
               {this.state.items.map((item, index) => 
-                <li className='App-listitem' key={index}>
+                <div className='App-listitem' key={index}>
                   <TodoItem id={index} todoItem={item} handleDelete={this.removeItem} />
-                </li>
+                </div>
               )}
-            </ul>
             <br/>
             {this.state.last ? <button onClick={this.restoreItem}>Restore deleted item</button> : ''}
           </div>
