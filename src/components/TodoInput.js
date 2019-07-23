@@ -4,20 +4,28 @@ class TodoInput extends React.Component{
     constructor(props){
       super(props);
   
-      this.state = {in: ''};
+      this.state = {
+        inTitle: '',
+        inDate: ''
+      };
   
       this.handleChange = this.handleChange.bind(this);
       this.handleSubmit = this.handleSubmit.bind(this);
     }
   
     handleChange(e){
-      this.setState({in: e.target.value});
+      this.setState({ [e.target.name]: e.target.value });
+      //this.setState({inTitle: e.target.value});
     }
   
     handleSubmit(e){
       e.preventDefault();
-      if(this.state.in != ''){
-        this.props.addItem(this.state.in);
+      if(this.state.inTitle != ''){
+        const todoItem = {
+          title: this.state.inTitle,
+          date: this.state.inDate
+        };
+        this.props.addItem(todoItem);
       }
     }
   
@@ -25,7 +33,8 @@ class TodoInput extends React.Component{
       return(
         <div>
           <form onSubmit={this.handleSubmit}>
-            <input className='App-input' type='text' name='name' value={this.state.in} onChange={this.handleChange} />
+            <input className='App-input' type='text' name='inTitle' value={this.state.inTitle} onChange={this.handleChange} />
+            <input className='App-input' type='text' name='inDate' value={this.state.inDate} onChange={this.handleChange} />
             <input className='App-button' type='submit' value='add todo' />
           </form>
         </div>

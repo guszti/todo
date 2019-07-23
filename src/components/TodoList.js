@@ -6,12 +6,27 @@ class TodoList extends React.Component{
     constructor(props){
       super(props);
   
-      this.state = {items: []}
+      this.state = {
+        items: [],
+        last: null
+      };
   
       this.addItem = this.addItem.bind(this);
       this.removeItem = this.removeItem.bind(this);
+      this.restoreItem = this.restoreItem.bind(this);
     }
   
+    restoreItem(){
+      const itemToRestore = this.state.last;
+      const newList = this.state.items;
+      newList.splice(itemToRestore.id, 0, itemToRestore.title);
+
+      this.setState({
+        items: newList,
+        last: null
+      });
+    }
+
     addItem(i){
       this.setState({ 
         items: this.state.items.concat([i])
@@ -19,16 +34,21 @@ class TodoList extends React.Component{
     }
   
     removeItem(id){
-      this.state.items.splice(id, 1);
-      /*this.setState(prevState => ({
-        items: prevState.items.filter(el => el !== id )
-      }));*/
+      const lastDeleted = {
+        id: id,
+        title: this.state.items[id]
+      };
+
+      const newList = this.state.items;
+      newList.splice(id, 1);
   
       this.setState({
-        items: this.state.items
+        items: newList,
+        last: lastDeleted
       });
       console.log(id);
     }
+
     render(){
         return(
           <div>
@@ -36,10 +56,12 @@ class TodoList extends React.Component{
             <ul className='App-list'>
               {this.state.items.map((item, index) => 
                 <li className='App-listitem' key={index}>
-                  <TodoItem id={index} text={item} handleDelete={this.removeItem} />
+                  <TodoItem id={index} todoItem={item} handleDelete={this.removeItem} />
                 </li>
               )}
             </ul>
+            <br/>
+            {this.state.last ? <button onClick={this.restoreItem}>Restore deleted item</button> : ''}
           </div>
         );
     }
