@@ -14,6 +14,8 @@ class TodoList extends React.Component{
       this.addItem = this.addItem.bind(this);
       this.removeItem = this.removeItem.bind(this);
       this.restoreItem = this.restoreItem.bind(this);
+      this.itemUp = this.itemUp.bind(this);
+      this.itemDown = this.itemDown.bind(this);
     }
   
     componentDidMount(){
@@ -23,6 +25,11 @@ class TodoList extends React.Component{
           items: JSON.parse(localStorage.getItem('items'))
         });
       }
+    }
+
+    componentDidUpdate(){
+      const items = this.state.items;
+      localStorage.setItem('items', JSON.stringify(items));
     }
     
     restoreItem(){
@@ -34,17 +41,11 @@ class TodoList extends React.Component{
         items: newList,
         last: null
       });
-
-      const items = this.state.items;
-      localStorage.setItem('items', JSON.stringify(items));
     }
 
     addItem(i){
       this.setState({ 
         items: this.state.items.concat([i])
-      }, () => {
-        const items = this.state.items;
-        localStorage.setItem('items', JSON.stringify(items));
       })
     }
   
@@ -61,9 +62,34 @@ class TodoList extends React.Component{
         items: newList,
         last: lastDeleted
       });
-      
-      const items = this.state.items;
-      localStorage.setItem('items', JSON.stringify(items));
+    }
+
+    itemUp(id){
+      if(id > 0){
+        const newList = this.state.items;
+        const temp = newList[id-1];
+
+        newList[id-1] = newList[id];
+        newList[id] = temp;
+
+        this.setState({
+          items: newList
+        });
+      }
+    }
+
+    itemDown(id){
+      if(id < this.state.items.length - 1){
+        const newList = this.state.items;
+        const temp = newList[id+1];
+
+        newList[id+1] = newList[id];
+        newList[id] = temp;
+
+        this.setState({
+          items: newList
+        });
+      }
     }
 
     render(){
@@ -73,7 +99,7 @@ class TodoList extends React.Component{
             <br />
               {this.state.items !== null ? this.state.items.map((item, index) => 
                 <div className='App-listitem' key={index}>
-                  <TodoItem id={index} todoItem={item} handleDelete={this.removeItem} />
+                  <TodoItem id={index} todoItem={item} handleDelete={this.removeItem} itemUp={this.itemUp} itemDown={this.itemDown} />
                 </div>
               ) : ''}
             <br/>
