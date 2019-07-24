@@ -113,7 +113,7 @@ class TodoList extends React.Component{
                 </div>
               ) : ''}
             <br/>
-            {this.state.last ? <button onClick={this.restoreItem}>Restore deleted item</button> : ''}
+            {this.state.last ? <button className='App-button' style={{}} onClick={this.restoreItem}>Restore deleted item</button> : ''}
           </div>
         );
     }
