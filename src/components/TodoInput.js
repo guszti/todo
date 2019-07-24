@@ -6,7 +6,8 @@ class TodoInput extends React.Component{
   
       this.state = {
         inTitle: '',
-        inDate: ''
+        inDate: '',
+        checked: false
       };
   
       this.handleChange = this.handleChange.bind(this);
@@ -15,7 +16,6 @@ class TodoInput extends React.Component{
   
     handleChange(e){
       this.setState({ [e.target.name]: e.target.value });
-      //this.setState({inTitle: e.target.value});
     }
   
     handleSubmit(e){
@@ -23,7 +23,8 @@ class TodoInput extends React.Component{
       if(this.state.inTitle !== ''){
         const todoItem = {
           title: this.state.inTitle,
-          date: this.state.inDate
+          date: this.state.inDate,
+          checked: this.state.checked
         };
         this.props.addItem(todoItem);
       }

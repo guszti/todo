@@ -16,6 +16,7 @@ class TodoList extends React.Component{
       this.restoreItem = this.restoreItem.bind(this);
       this.itemUp = this.itemUp.bind(this);
       this.itemDown = this.itemDown.bind(this);
+      this.handleCheck = this.handleCheck.bind(this);
     }
   
     componentDidMount(){
@@ -92,6 +93,15 @@ class TodoList extends React.Component{
       }
     }
 
+    handleCheck(id){
+      const newList = this.state.items;
+      newList[id].checked = !newList[id].checked;
+
+      this.setState({
+        items: newList
+      });
+    }
+
     render(){
         return(
           <div>
@@ -99,7 +109,7 @@ class TodoList extends React.Component{
             <br />
               {this.state.items !== null ? this.state.items.map((item, index) => 
                 <div className='App-listitem' key={index}>
-                  <TodoItem id={index} todoItem={item} handleDelete={this.removeItem} itemUp={this.itemUp} itemDown={this.itemDown} />
+                  <TodoItem id={index} todoItem={item} handleDelete={this.removeItem} itemUp={this.itemUp} itemDown={this.itemDown} handleCheck={this.handleCheck} />
                 </div>
               ) : ''}
             <br/>
