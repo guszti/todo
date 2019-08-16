@@ -12,21 +12,28 @@ class TodoInput extends React.Component{
   
       this.handleChange = this.handleChange.bind(this);
       this.handleSubmit = this.handleSubmit.bind(this);
+      this.createTodo = this.createTodo.bind(this);
     }
   
     handleChange(e){
       this.setState({ [e.target.name]: e.target.value });
     }
   
-    handleSubmit(e){
-      e.preventDefault();
-      if(this.state.inTitle !== ''){
+    createTodo(){
         const todoItem = {
           title: this.state.inTitle,
           date: this.state.inDate,
           checked: this.state.checked
         };
-        this.props.addItem(todoItem);
+
+        return todoItem;
+    }
+
+    handleSubmit(e){
+      e.preventDefault();
+      if(this.state.inTitle !== ''){
+        const newTodo = this.createTodo();
+        this.props.addItem(newTodo);
       }
     }
   

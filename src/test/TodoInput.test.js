@@ -1,9 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import TodoInput from '../components/TodoInput';
+import TodoList from '../components/TodoList';
 import { mount } from 'enzyme';
 import Enzyme from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
+import { create } from 'react-test-renderer';
+import { jsxEmptyExpression } from '@babel/types';
 
 Enzyme.configure({ adapter: new Adapter() });
 
@@ -22,4 +25,23 @@ describe('form input', () => {
 
     expect(component.state().inTitle).toEqual('Will this test pass?');
   });
+});
+
+test('creating todo-item', () => {
+  let component = mount(<TodoInput />);
+
+  component.instance().state.inTitle = 'title';
+  component.instance().state.inDate = 'date';
+
+  const newTodo = component.instance().createTodo();
+
+  expect(newTodo).toEqual({title: 'title', date: 'date', checked: false});
+});
+
+test('submit todoitem', () => {
+  const fake = jest.spyOn(TodoInput.prototype, 'handleSubmit');
+  const component = mount(<TodoInput addItem={ () => { return; } } />);
+  component.find('form').at(0).simulate('submit');
+  
+  expect(fake).toHaveBeenCalled();
 });
