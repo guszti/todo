@@ -1,105 +1,48 @@
 import * as React from "react";
 import TodoInput from "./TodoInput";
 import TodoItem from "./TodoItem";
-import { FC, memo, useEffect, useState } from "react";
-
-export type Item = {
-    id: number;
-    title: string;
-    isChecked: boolean;
-};
+import { FC, memo, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { getItems, getLastRemoved } from "../redux/selectors";
+import { restoreLastRemoved, setTodos } from "../redux/actions";
 
 const TodoList: FC = () => {
-    const [items, setItems] = useState<Item[]>([]);
-    const [last, setLast] = useState<Item | null>(null);
+    const dispatch = useDispatch();
+
+    const items = useSelector(getItems);
+    const lastRemoved = useSelector(getLastRemoved);
 
     useEffect(() => {
         const items = localStorage.getItem("items");
 
         if (items !== null) {
-            setItems(JSON.parse(items));
+            dispatch(setTodos(JSON.parse(items)));
         }
     }, []);
 
-    /*
-    componentDidUpdate(){
-      const items = this.state.items;
-      localStorage.setItem('items', JSON.stringify(items));
-    }
-     */
+    useEffect(() => {
+        localStorage.setItem("items", JSON.stringify(items));
+    }, [items.length]);
 
     const restoreItem = () => {
-        if (last === null) return;
+        if (!lastRemoved) return;
 
-        const newList = [...items];
-
-        newList.splice(last.id, 0);
-
-        setItems(newList);
-        setLast(null);
-    };
-
-    const addItem = (item: Item) => setItems([...items, item]);
-
-    const removeItem = (id: number) => {
-        const newList = [...items];
-        newList.splice(id, 1);
-
-        setItems(newList);
-        setLast(items[id]);
-    };
-
-    const itemUp = (id: number) => {
-        if (id > 0) {
-            const newList = [...items];
-            const temp = newList[id - 1];
-
-            newList[id - 1] = newList[id];
-            newList[id] = temp;
-
-            setItems(newList);
-        }
-    };
-
-    const itemDown = (id: number) => {
-        if (id < items.length - 1) {
-            const newList = [...items];
-            const temp = newList[id + 1];
-
-            newList[id + 1] = newList[id];
-            newList[id] = temp;
-
-            setItems(newList);
-        }
-    };
-
-    const handleCheck = (id: number) => {
-        const newList = [...items];
-        newList[id].isChecked = !newList[id].isChecked;
-
-        setItems(newList);
+        dispatch(restoreLastRemoved());
     };
 
     return (
         <div>
-            <TodoInput addItem={addItem} />
+            <TodoInput />
             <br />
-            {items !== null
+            {!!items.length
                 ? items.map((item, index) => (
                       <div className="App-listitem" key={index}>
-                          <TodoItem
-                              id={index}
-                              todoItem={item}
-                              handleDelete={removeItem}
-                              itemUp={itemUp}
-                              itemDown={itemDown}
-                              handleCheck={handleCheck}
-                          />
+                          <TodoItem id={index} todoItem={item} />
                       </div>
                   ))
                 : ""}
             <br />
-            {last ? (
+            {!!lastRemoved ? (
                 <button className="App-button" style={{}} onClick={restoreItem}>
                     Restore deleted item
                 </button>

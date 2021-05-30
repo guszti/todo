@@ -1,19 +1,18 @@
 import * as React from "react";
 import { ChangeEvent, FC, FormEvent, memo, useState } from "react";
+import { useDispatch } from "react-redux";
+import { addTodo } from "../redux/actions";
 
 enum InputNames {
     Title = "title",
     Date = "date",
 }
 
-type OwnProps = {
-    addItem(newTodo: any): void;
-};
+const TodoInput: FC = () => {
+    const dispatch = useDispatch();
 
-const TodoInput: FC<OwnProps> = ({ addItem }) => {
     const [title, setTitle] = useState("");
     const [date, setDate] = useState("");
-    const [isChecked, setIsChecked] = useState(false);
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         switch (e.target.name) {
@@ -27,14 +26,16 @@ const TodoInput: FC<OwnProps> = ({ addItem }) => {
 
     const handleSubmit = (e: FormEvent) => {
         e.preventDefault();
-        if (!!title) {
-            const newTodo = {
-                title,
-                date,
-                isChecked,
-            };
-            addItem(newTodo);
-        }
+
+        if (!title) return;
+
+        const todo = {
+            title,
+            date,
+            isChecked: false,
+        };
+
+        dispatch(addTodo(todo));
     };
 
     return (

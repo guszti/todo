@@ -1,41 +1,73 @@
 import * as React from "react";
 import { FC, memo } from "react";
+import { Item } from "../types";
+import { removeTodo, setLastRemoved, setTodos } from "../redux/actions";
+import { useDispatch, useSelector } from "react-redux";
+import { getItems } from "../redux/selectors";
 
 type OwnProps = {
-    todoItem: any;
-    handleDelete(id: number): void;
-    handleCheck(id: number): void;
+    todoItem: Item;
     id: number;
-    itemDown(id: number): void;
-    itemUp(id: number): void;
 };
 
-const TodoItem: FC<OwnProps> = ({
-    todoItem,
-    handleDelete,
-    handleCheck,
-    id,
-    itemDown,
-    itemUp,
-}) => {
+const TodoItem: FC<OwnProps> = ({ todoItem, id }) => {
+    const dispatch = useDispatch();
+
+    const items = useSelector(getItems);
+
+    const removeItem = (id: number) => {
+        const newList = [...items];
+        newList.splice(id, 1);
+
+        dispatch(removeTodo(id));
+        dispatch(setLastRemoved({ ...items[id], index: id }));
+    };
+
+    const itemUp = (id: number) => {
+        if (id > 0) {
+            const newList = [...items];
+            const temp = newList[id - 1];
+
+            newList[id - 1] = newList[id];
+            newList[id] = temp;
+
+            dispatch(setTodos(newList));
+        }
+    };
+
+    const itemDown = (id: number) => {
+        if (id < items.length - 1) {
+            const newList = [...items];
+            const temp = newList[id + 1];
+
+            newList[id + 1] = newList[id];
+            newList[id] = temp;
+
+            dispatch(setTodos(newList));
+        }
+    };
+
+    const handleCheck = (id: number) => {
+        const newList = [...items];
+        newList[id].isChecked = !newList[id].isChecked;
+
+        dispatch(setTodos(newList));
+    };
+
     return (
         <div>
-            {todoItem.checked ? (
-                <input
-                    type="checkbox"
-                    onChange={handleCheck.bind(this, id)}
-                    checked
-                />
-            ) : (
-                <input type="checkbox" onChange={handleCheck.bind(this, id)} />
-            )}
-            {todoItem.checked ? (
+            <input
+                type="checkbox"
+                onChange={() => handleCheck(id)}
+                checked={todoItem.isChecked}
+            />
+            {todoItem.isChecked ? (
                 <del> {todoItem.title}</del>
             ) : (
                 "   " + todoItem.title
             )}
             <button
-                onClick={handleDelete.bind(this, id)}
+                onClick={() => removeItem(id)}
                 style={{
                     float: "right",
                     height: 27,
@@ -47,7 +79,7 @@ const TodoItem: FC<OwnProps> = ({
                 X
             </button>
             <button
-                onClick={itemDown.bind(this, id)}
+                onClick={() => itemDown(id)}
                 style={{
                     float: "right",
                     height: 27,
@@ -59,7 +91,7 @@ const TodoItem: FC<OwnProps> = ({
                 -
             </button>
             <button
-                onClick={itemUp.bind(this, id)}
+                onClick={() => itemUp(id)}
                 style={{
                     float: "right",
                     height: 27,
